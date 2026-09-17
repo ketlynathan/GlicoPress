@@ -8,7 +8,7 @@
   "devCommand": "npm run dev",
   "cleanUrls": true,
   "functions": {
-    "glicopress---diário-de-glicemia-e-pressão/api/**/*.ts": {
+    "api/**/*.ts": {
       "maxDuration": 10
     }
   },
