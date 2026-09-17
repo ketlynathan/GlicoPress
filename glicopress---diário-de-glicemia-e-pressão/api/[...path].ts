@@ -4,7 +4,7 @@ import { db, schema } from '../server/db';
 import { clearSession, getSessionUserId, hashPassword, json, method, normalizeEmail, safeError, setSession, verifyPassword } from '../server/auth';
 
 const publicUser = (u: schema.User) => ({ id: u.id, name: u.name, email: u.email, createdAt: u.createdAt });
-const pathOf = (req: VercelRequest) => (Array.isArray(req.query.path) ? req.query.path.join('/') : String(req.query.path ?? '')).replace(/^api\/?/, '');
+const pathOf = (req: VercelRequest) => { const queryPath = Array.isArray(req.query.path) ? req.query.path.join('/') : String(req.query.path ?? ''); const urlPath = req.url?.split('?')[0]?.replace(/^\//, '') ?? ''; return (queryPath || urlPath).replace(/^api\/?/, '').replace(/\/$/, ''); };
 const body = (req: VercelRequest) => (req.body && typeof req.body === 'object' ? req.body as Record<string, unknown> : {});
 const requireUser = async (req: VercelRequest, res: VercelResponse) => { const id = await getSessionUserId(req); if (!id) { json(res, 401, { error: 'Sessão expirada. Faça login novamente.' }); return null; } return id; };
 const validNumber = (x: unknown) => x === undefined || x === null || (typeof x === 'number' && Number.isFinite(x));
