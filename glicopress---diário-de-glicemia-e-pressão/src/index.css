@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .whatsapp-bg {
+    background-color: #efeae2;
+    background-image: radial-gradient(#d1d7db 1px, transparent 1px), radial-gradient(#d1d7db 1px, #efeae2 1px);
+    background-size: 40px 40px;
+    background-position: 0 0, 20px 20px;
+  }
+}
+
+/* Accessibility high-contrast mode */
+body.high-contrast {
+  filter: contrast(1.15);
+}
+
+body.high-contrast .whatsapp-bg {
+  background-color: #f7f6f3;
+}
+
+/* Custom scrollbar matching WhatsApp web */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+

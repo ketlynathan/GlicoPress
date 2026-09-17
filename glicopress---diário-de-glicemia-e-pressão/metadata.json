@@ -1,0 +1,8 @@
+{
+  "name": "GlicoPress - Diário de Glicemia e Pressão",
+  "description": "Aplicativo estilo WhatsApp para controle diário de glicemia e pressão arterial com medicamentos, gráficos e relatórios em PDF para idosos.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
