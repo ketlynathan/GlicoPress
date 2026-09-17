@@ -9,7 +9,6 @@
   "cleanUrls": true,
   "functions": {
     "glicopress---diário-de-glicemia-e-pressão/api/**/*.ts": {
-      "runtime": "nodejs22.x",
       "maxDuration": 10
     }
   },
