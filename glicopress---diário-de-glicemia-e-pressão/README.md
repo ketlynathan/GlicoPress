@@ -27,7 +27,7 @@ Crie um projeto PostgreSQL no [Neon](https://neon.tech), copie a connection stri
 
 ## Vercel
 
-Importe o repositório na Vercel, configure o diretório raiz como `glicopress---diário-de-glicemia-e-pressão` se necessário e cadastre `DATABASE_URL`, `AUTH_SECRET` e `NODE_ENV=production` em Production/Preview. O `vercel.json` configura `npm ci`, `npm run build`, saída `dist`, runtime Node.js 22 para as Functions, fallback SPA e headers de segurança. A pasta `api` é detectada como Vercel Function. Execute as migrations a partir de uma máquina segura usando a mesma `DATABASE_URL` antes do primeiro acesso.
+Importe o repositório na Vercel, configure o diretório raiz como `glicopress---diário-de-glicemia-e-pressão` se necessário e cadastre `DATABASE_URL`, `AUTH_SECRET` e `NODE_ENV=production` em Production/Preview. O `vercel.json` configura `npm ci`, `npm run build`, saída `dist`, fallback SPA e headers de segurança. A pasta `api` é detectada como Vercel Function e usa o runtime Node padrão da Vercel. Execute as migrations a partir de uma máquina segura usando a mesma `DATABASE_URL` antes do primeiro acesso.
 
 Não configure `DATABASE_URL` ou `AUTH_SECRET` como variáveis `VITE_*`: elas são server-side e nunca devem entrar no bundle do navegador. Após o primeiro deploy, valide o domínio HTTPS, o cookie `glicopress_session` com atributos `HttpOnly; Secure; SameSite=Lax` e os endpoints `/api/auth/me` e `/api/records`.
 
