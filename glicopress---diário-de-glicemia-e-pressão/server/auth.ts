@@ -3,6 +3,7 @@ import { SignJWT, jwtVerify } from 'jose';
 import type { VercelRequest, VercelResponse } from './vercel-types';
 
 const COOKIE = 'glicopress_session';
+export const authConfigured = (process.env.AUTH_SECRET ?? '').length >= 32;
 const secret = () => new TextEncoder().encode(process.env.AUTH_SECRET ?? 'development-only-change-me');
 export const normalizeEmail = (email: unknown) => typeof email === 'string' ? email.trim().toLowerCase() : '';
 export const hashPassword = (password: string) => bcrypt.hash(password, 12);

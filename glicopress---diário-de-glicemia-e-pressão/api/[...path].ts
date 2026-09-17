@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '../server/vercel-types';
 import { and, desc, eq, sql } from 'drizzle-orm';
 import { db, databaseConfigured, schema } from '../server/db';
-import { clearSession, getSessionUserId, hashPassword, json, method, normalizeEmail, safeError, setSession, verifyPassword } from '../server/auth';
+import { authConfigured, clearSession, getSessionUserId, hashPassword, json, method, normalizeEmail, safeError, setSession, verifyPassword } from '../server/auth';
 
 const publicUser = (u: schema.User) => ({ id: u.id, name: u.name, email: u.email, createdAt: u.createdAt });
 const pathOf = (req: VercelRequest) => { const queryPath = Array.isArray(req.query.path) ? req.query.path.join('/') : String(req.query.path ?? ''); const urlPath = req.url?.split('?')[0]?.replace(/^\//, '') ?? ''; return (queryPath || urlPath).replace(/^api\/?/, '').replace(/\/$/, ''); };
@@ -13,7 +13,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Cache-Control', 'no-store');
   const p = pathOf(req); const input = body(req);
   try {
-    if (!databaseConfigured && ['auth/register', 'auth/login'].includes(p)) return json(res, 503, { error: 'Serviço temporariamente indisponível. Configure o banco de dados da aplicação.' });
+    if ((!databaseConfigured || !authConfigured) && ['auth/register', 'auth/login'].includes(p)) return json(res, 503, { error: 'Serviço temporariamente indisponível. Configure DATABASE_URL e AUTH_SECRET na Vercel.' });
     if (p === 'auth/register' && method(req, ['POST'])) { const email = normalizeEmail(input.email); const name = typeof input.name === 'string' ? input.name.trim() : ''; const password = typeof input.password === 'string' ? input.password : ''; if (!name || !email.includes('@') || password.length < 8) return json(res, 400, { error: 'Informe nome, e-mail válido e senha com pelo menos 8 caracteres.' }); const exists = await db.select({ id: schema.users.id }).from(schema.users).where(eq(schema.users.email, email)).limit(1); if (exists.length) return json(res, 400, { error: 'Não foi possível criar a conta com esses dados.' }); const [u] = await db.insert(schema.users).values({ name, email, passwordHash: await hashPassword(password) }).returning(); await setSession(res, u.id); return json(res, 201, { user: publicUser(u) }); }
     if (p === 'auth/login' && method(req, ['POST'])) { const email = normalizeEmail(input.email); const password = typeof input.password === 'string' ? input.password : ''; const [u] = await db.select().from(schema.users).where(eq(schema.users.email, email)).limit(1); if (!u || !(await verifyPassword(password, u.passwordHash))) return json(res, 401, { error: 'E-mail ou senha inválidos.' }); await setSession(res, u.id); return json(res, 200, { user: publicUser(u) }); }
     if (p === 'auth/logout' && method(req, ['POST'])) { clearSession(res); return json(res, 200, { ok: true }); }
