@@ -1,0 +1,11 @@
+{
+  "name": "glicopress-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "npm --prefix glicopress---diário-de-glicemia-e-pressão run dev",
+    "build": "npm --prefix glicopress---diário-de-glicemia-e-pressão run build",
+    "preview": "npm --prefix glicopress---diário-de-glicemia-e-pressão run preview",
+    "postinstall": "npm --prefix glicopress---diário-de-glicemia-e-pressão ci --no-audit --no-fund"
+  }
+}
